@@ -44,15 +44,20 @@ Step 2: Create SSH Config File
 
 Save and exit the editor.
 
-Step 3: Add SSH Keys to SSH Agent
----------------------------------
+Step 3: Add SSH Keys to SSH Agent using keychain
+------------------------------------------------
 
-    # Start the SSH agent
-    eval "$(ssh-agent -s)"
+    # Install keychain (if not installed)
+    # For Debian/Ubuntu
+    sudo apt-get install keychain
     
-    # Add SSH keys to the agent
-    ssh-add ~/.ssh/directory_github
-    ssh-add ~/.ssh/b2bdirectory_github
+    # For Red Hat/Fedora
+    sudo dnf install keychain
+    
+
+    # Start keychain to manage SSH agent and keys
+    eval "$(keychain --quiet --eval --agents ssh)"
+    keychain --clear id_rsa directory_github b2bdirectory_github
     
 
 Step 4: Automate SSH Agent Setup
@@ -65,16 +70,10 @@ Open or create `~/.bashrc`:
     nano ~/.bashrc
     
 
-Add the following lines at the end of the file:
+Add the following line at the end of the file:
 
-    # Start the SSH agent (if not running)
-    if [ ! -S "$SSH_AUTH_SOCK" ]; then
-        eval "$(ssh-agent -s)"
-    fi
-    
-    # Add SSH keys to the agent
-    ssh-add -l | grep -q "directory_github" || ssh-add ~/.ssh/directory_github
-    ssh-add -l | grep -q "b2bdirectory_github" || ssh-add ~/.ssh/b2bdirectory_github
+    # Start keychain to manage SSH agent and keys
+    eval "$(keychain --quiet --eval --agents ssh)"
     
 
 Save and exit the editor. Restart your terminal or run:
@@ -89,16 +88,10 @@ Open or create `~/.zshrc`:
     nano ~/.zshrc
     
 
-Add the following lines at the end of the file:
+Add the following line at the end of the file:
 
-    # Start the SSH agent (if not running)
-    if [ ! -S "$SSH_AUTH_SOCK" ]; then
-        eval "$(ssh-agent -s)"
-    fi
-    
-    # Add SSH keys to the agent
-    ssh-add -l | grep -q "directory_github" || ssh-add ~/.ssh/directory_github
-    ssh-add -l | grep -q "b2bdirectory_github" || ssh-add ~/.ssh/b2bdirectory_github
+    # Start keychain to manage SSH agent and keys
+    eval "$(keychain --quiet --eval --agents ssh)"
     
 
 Save and exit the editor. Restart your terminal or run:
@@ -106,4 +99,4 @@ Save and exit the editor. Restart your terminal or run:
     source ~/.zshrc
     
 
-Now, your SSH keys are configured, and the SSH agent is set up to automatically handle them whenever you start a new terminal session.
+Now, your SSH keys are configured, and the SSH agent is set up using keychain to automatically handle them whenever you start a new terminal session.
